@@ -61,45 +61,60 @@ Notiere für den Warenbestand ein Protokoll aller Warenbestandsänderungen mit V
 * */
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Welcome to the Shop!");
-        Product stift = new Product("123","Bleistift 3er Set", 2.99,73);
-        Product pinsel = new Product("124","Pinsel", 15.45,22);
-        Product farben = new Product("125","Aquarellfarben", 102.99,5);
-        Product papierW = new Product("126","Aquarellpapier 25 Blatt", 52.20, 45);
-        Product papierN = new Product("127","Zeichenpapier", 32.46,68);
+        Product stift = new Product("123","Bleistift 3er Set", 2.99,10);
+        Product pinsel = new Product("124","Pinsel", 15.45,10);
+        Product farben = new Product("125","Aquarellfarben", 102.99,10);
+        Product papierW = new Product("126","Aquarellpapier 25 Blatt", 52.20, 10);
+        Product papierN = new Product("127","Zeichenpapier", 32.46,10);
 
-        ProductRepo productRepo = new ProductRepo();
-        OrderRepo orderRepo = new OrderMapRepo();
-        ShopService shopService = new ShopService(productRepo, orderRepo);
+        ProductRepo wahrenKorb1 = new ProductRepo();
+        OrderRepo bestellungen = new OrderMapRepo();
+        ShopService sitzung1 = new ShopService(wahrenKorb1, bestellungen);
 
-        //Produkte hinzufügen
-        productRepo.addProduct(stift);
-        productRepo.addProduct(papierN);
-        productRepo.addProduct(papierW);
-        System.out.println("Im Korb "+productRepo.showAllProducts());
-        productRepo.removeProduct("126");
-        System.out.println("Produkt gelöscht "+productRepo.showAllProducts());
+        ProductRepo wahrenKorb2 = new ProductRepo();
+        ShopService sitzung2 = new ShopService(wahrenKorb2, bestellungen);
+
+        //Produkte hinzufügen Sitzung1
+        wahrenKorb1.addProduct(stift);
+        wahrenKorb1.addProduct(papierN);
+        wahrenKorb1.addProduct(papierW);
+        System.out.println("Im Korb 1 "+wahrenKorb1.showAllProducts());
+        wahrenKorb1.removeProduct("126");
+        System.out.println("Produkt gelöscht "+wahrenKorb1.showAllProducts());
+
+        //Produkte hinzufügen Sitzung 2
+        wahrenKorb2.addProduct(pinsel);
+        wahrenKorb2.addProduct(farben);
+        wahrenKorb2.addProduct(papierW);
+        System.out.println("Im Korb 2 "+wahrenKorb2.showAllProducts());
 
         //Bestellen
-        shopService.placeOrder(productRepo);
+        sitzung1.placeOrder(wahrenKorb1);
+        System.out.println(bestellungen.getAllOrders());
 
-        System.out.println(orderOverview(orderRepo.getAllOrders()));
+        sitzung2.placeOrder(wahrenKorb2);
+        System.out.println(bestellungen.getAllOrders());
+
+        //Cancel Bestellung 1
+        bestellungen.cancelOrder("23-09-04-1");
+        System.out.println(bestellungen.getAllOrders());
     }
 
-    public static String orderOverview(List<Order> allOrders){
-        double sumPrice = 0;
+    /*public static String orderOverview(List<Order> allOrders){
         if(!allOrders.isEmpty()) {
             for (Order order : allOrders) {
-                System.out.println("Order ID: " + order.orderID());
+                double sumPrice = 0;
+                System.out.println("------------------------\nOrder ID: " + order.orderID());
                 System.out.println("Produkte: ");
                 for (Product product : order.products().showAllProducts()) {
                     sumPrice += product.price();
                     System.out.println("- " + product.name() + " - " + product.price() + " € ");
                 }
+                System.out.println("------------------------\n Summe "+sumPrice);
             }
-            return "------------------------\n Summe "+sumPrice;
+            return "------------------------";
         }else {
             return "No Orders placed";
         }
-    }
+    }*/
 }

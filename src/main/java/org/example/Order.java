@@ -2,5 +2,5 @@ package org.example;
 
 import java.util.List;
 
-public record Order(String orderID, ProductRepo products) {
+public record Order(String orderID, ProductRepo products, double priceSum) {
 }

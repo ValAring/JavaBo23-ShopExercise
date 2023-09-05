@@ -30,7 +30,19 @@ public class OrderListRepo {
         }
         return null;
     }
-    public List<Order> getAllOrders(){
-        return new ArrayList<>(orders);
+    public String getAllOrders(){
+        if(!orders.isEmpty()) {
+            for (Order order : orders) {
+                System.out.println("------------------------\nOrder ID: " + order.orderID());
+                System.out.println("Produkte: ");
+                for (Product product : order.products().showAllProducts()) {
+                    System.out.println("- " + product.name() + " - " + product.price() + " € ");
+                }
+                System.out.println("------------------------\n"+order.priceSum());
+            }
+            return "------------------------";
+        }else {
+            return "No Orders placed";
+        }
     }
 }
